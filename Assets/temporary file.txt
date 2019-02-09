@@ -1,0 +1,1 @@
+I am a temporary file to make sure that the assets folder is included in the commit
