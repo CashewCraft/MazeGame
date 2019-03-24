@@ -10,13 +10,16 @@ public class Node : MonoBehaviour
 	private void OnDrawGizmos()
 	{
 #if UNITY_EDITOR
-		Gizmos.color = Color.red;
-		Gizmos.DrawSphere(transform.position, 0.03f);
-
-		Gizmos.color = Color.green;
-		foreach (Node i in Connections)
+		if (Level == NodeEditor.Level)
 		{
-			Gizmos.DrawLine(transform.position, i.transform.position);
+			Gizmos.color = Color.red;
+			Gizmos.DrawSphere(transform.position, 0.03f);
+
+			Gizmos.color = Color.green;
+			foreach (Node i in Connections)
+			{
+				Gizmos.DrawLine(transform.position, i.transform.position);
+			}
 		}
 #endif
 	}
