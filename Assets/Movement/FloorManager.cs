@@ -17,7 +17,7 @@ public class FloorManager : MonoBehaviour
 	public int index = 0;
 
 	//debug value to see the current float value of the floor
-	public float debug;
+	public float level;
 
 	private void Start()
 	{
@@ -30,7 +30,7 @@ public class FloorManager : MonoBehaviour
 	public void SetFloor(float Level)
 	{
 		//output the level for debug reasons, since it doesn't play nice with prints for some reason
-		debug = Level;
+		level = Level;
 
 		if (Mathf.FloorToInt(Level) != index) //if we're on a different floor the the current one
 		{
@@ -197,5 +197,21 @@ public class FloorManager : MonoBehaviour
 		//add the stairs to the list for the two floors it's connecting
 		StairList[f1].Add(a);
 		StairList[f2].Add(a);
+	}
+
+	public float GetOpacity(float Pos)
+	{
+		if (Pos - level >= 1)
+		{
+			return 0;
+		}
+		else if (Pos - level <= 0)
+		{
+			return 1;
+		}
+		else
+		{
+			return 1 - ((Pos - level) / 1);
+		}
 	}
 }
