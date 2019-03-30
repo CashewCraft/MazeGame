@@ -7,6 +7,8 @@ public class PlayerMovement : MonoBehaviour
 	//the rigidbody of the player, used for quick reference
 	public Rigidbody2D rb;
 
+	public Animator Model;
+
 	//a multiplier applied to the speed of the player
 	public float SpeedMult = 1;
 
@@ -26,5 +28,10 @@ public class PlayerMovement : MonoBehaviour
 
 		//set the rotation to be the calculated angle rotated around the z axis
 		transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
+		if (rb.velocity.magnitude > 0)
+		{
+			//Put animation stuff in here
+		}
 	}
 }

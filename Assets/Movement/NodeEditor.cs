@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class NodeEditor : MonoBehaviour {
 
-	private Node Selected;
+	public static Node Selected;
 	public GameObject Prototype;
 	public static float Level;
 	public Transform ParentObject;
+	public static bool Active = false;
 
 	private List<GameObject> CreatedNodes = new List<GameObject>();
-	
+
 	/*
 		HOW TO USE THIS SCRIPT:
 
@@ -24,13 +25,13 @@ public class NodeEditor : MonoBehaviour {
 		-You can only select nodes that you are on the same floor as
 	*/
 
+	private void Start()
+	{
+		Active = true;
+	}
+
 	void Update ()
 	{
-		if (Selected != null) //if something is selected
-		{
-			Gizmos.color = Color.yellow; //highlight it
-			Gizmos.DrawSphere(transform.position, 0.04f);
-		}
 
 		Vector2 MousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Get the position of the mouse
 
