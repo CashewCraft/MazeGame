@@ -29,6 +29,12 @@ public class AIagent : MonoBehaviour {
 		//Keep looping until we find the destingation
 		while (Target.Represent != Destination)
 		{
+			if (Open.Count == 0) //if there are not more open nodes
+			{
+				print("Could not find destination in the graph");
+				return; //end the function since the desination is not reachable from the current node
+			}
+
 			//set the lowest cost as the first element's cost so we don't end up repeating closed nodes
 			Target = Open[0];
 			float LowestCost = Open[0].Fcost;
@@ -90,12 +96,6 @@ public class AIagent : MonoBehaviour {
 
 			Open.Remove(Target); //move the target from open into closed
 			Closed.Add(Target);
-
-			if (Open.Count == 0) //if there are not more open nodes
-			{
-				print("Could not find destination in the graph");
-				return; //end the function since the desination is not reachable from the current node
-			}
 		}
 		
 		//loop until there is no previous node (we reached the begining)
@@ -156,7 +156,7 @@ public class PathfindingNodeInfo
 
 	public PathfindingNodeInfo(Node Target, Node This, PathfindingNodeInfo Parent)
 	{
-		Fcost = Parent.Hcost + Vector3.Distance(This.transform.position, Target.transform.position);
+		Fcost = ((Parent == null) ? 0 : Parent.Hcost) + Vector3.Distance(This.transform.position, Target.transform.position);
 		Hcost = (Parent == null) ? 0 : Parent.Hcost + Vector3.Distance(This.transform.position, Parent.Represent.transform.position);
 		Represent = This;
 		Previous = Parent;
