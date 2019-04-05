@@ -87,7 +87,7 @@ public class AIagent : MonoBehaviour {
 					}
 				}
 
-				if (!FoundMatch) //if neither of the last two steps found a match
+				if (!FoundMatch && !Connections[Edge].Blocked) //if neither of the last two steps found a match and the connection isn't blocked
 				{
 					//add this node to the open nodes
 					Open.Add(new PathfindingNodeInfo(Destination, Connections[Edge], Target));

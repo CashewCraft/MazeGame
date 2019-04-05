@@ -80,16 +80,5 @@ public class NodeEditor : MonoBehaviour {
 			Level -= 0.5f; //down arrow moves us down half a floor
 			FloorManager.ins.SetFloor(Level);
 		}
-		if (Input.GetKeyDown(KeyCode.S))
-		{
-			//S removes any colliders from the created nodes
-			foreach (GameObject i in CreatedNodes)
-			{
-				if (i.GetComponent<Collider2D>() != null)
-				{
-					Destroy(i.GetComponent<Collider2D>());
-				}
-			}
-		}
 	}
 }
