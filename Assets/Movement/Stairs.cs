@@ -36,7 +36,9 @@ public class Stairs : MonoBehaviour
 		if (other.tag == "Player")
 		{
 			//get the exact "floor" the player is on (i.e. halfway up on stairs from floors 1 to 2 should give 1.5)
+			print(Percent((useX) ? other.transform.position.x : other.transform.position.y, Min, Max));
 			float level = Mathf.Lerp(FromFloor, ToFloor, Percent((useX)?other.transform.position.x:other.transform.position.y, Min, Max));
+			print(level);
 			FloorManager.ins.SetFloor(level); //send the progress to the floor manager to set transparency appropriately
 		}
 	}

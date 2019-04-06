@@ -6,6 +6,7 @@ public class Node : MonoBehaviour
 {
 	public List<Node> Connections = new List<Node>();
 	public float Level;
+	public bool Blocked = false;
 
 	public void Start()
 	{

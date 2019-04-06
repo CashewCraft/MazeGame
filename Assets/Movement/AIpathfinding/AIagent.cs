@@ -13,6 +13,13 @@ public class AIagent : MonoBehaviour {
 	public Node[] ToPath;
 
 	public float ReachDistance = 0.01f;
+	public float AvoidDist = 1;
+
+	public float Level = 0;
+
+	bool CanCollide = true;
+
+	List<Transform> CurrentCollided = new List<Transform>();
 
 	void GenPathTo(Node Destination)
 	{
@@ -87,7 +94,7 @@ public class AIagent : MonoBehaviour {
 					}
 				}
 
-				if (!FoundMatch) //if neither of the last two steps found a match
+				if (!FoundMatch && !Connections[Edge].Blocked) //if neither of the last two steps found a match and the connection isn't blocked
 				{
 					//add this node to the open nodes
 					Open.Add(new PathfindingNodeInfo(Destination, Connections[Edge], Target));
@@ -115,8 +122,25 @@ public class AIagent : MonoBehaviour {
 
 	private void Update()
 	{
-		//set the velocity to be towards the next node
-		rb.velocity = ((Vector2)(Current.gameObject.transform.position - transform.position)).normalized * Speed;
+		Vector2 SteerDirection = new Vector2();
+
+		//set the intial velocity to be towards the target
+		SteerDirection = ((Vector2)(Current.gameObject.transform.position - transform.position)).normalized * Speed;
+
+		//Apply any steering needed for collision avoidance
+		SteerDirection += AvoidDanger();
+
+		Vector2 SteerForce = Vector2.ClampMagnitude(SteerDirection, 0.1f);
+
+		//Apply Steering force to the velocity and clamp to speed
+		rb.velocity = Vector2.ClampMagnitude(rb.velocity + SteerForce, Speed);
+
+		//Look towards target
+		Vector2 MyPos = transform.position;
+		Vector2 Target = rb.position + rb.velocity;
+		float angleRad = Mathf.Atan2(MyPos.y - Target.y, MyPos.x - Target.x);
+
+		transform.rotation = Quaternion.AngleAxis((angleRad * Mathf.Rad2Deg) + 90, Vector3.forward);
 
 		//if we have reached the current node and the path isn't empty
 		if (Vector2.Distance(Current.gameObject.transform.position, transform.position) < ReachDistance && Path.Count > 0)
@@ -129,20 +153,82 @@ public class AIagent : MonoBehaviour {
 		float Dist = Vector2.Distance(Last.transform.position, Current.transform.position);
 
 		//interpolate the current level based on the level difference between the two nodes and how far we are between them
-		float level = Mathf.Lerp(Last.Level, Current.Level, ((Dist - Vector2.Distance(transform.position, Current.transform.position)) / Dist));
+		Level = Mathf.Lerp(Last.Level, Current.Level, ((Dist - Vector2.Distance(transform.position, Current.transform.position)) / Dist));
+
+		if (Mathf.Abs(FloorManager.ins.level - Level) > 0.5f && CanCollide)
+		{
+			CanCollide = false;
+			foreach (Collider2D Object in GetComponents<Collider2D>())
+			{
+				Object.enabled = false;
+			}
+		}
+		else if (Mathf.Abs(FloorManager.ins.level - Level) <= 0.5f && !CanCollide)
+		{
+			CanCollide = true;
+			foreach (Collider2D Object in GetComponents<Collider2D>())
+			{
+				Object.enabled = true;
+			}
+		}
 
 		//set the Z of the current position to one above the current level
-		transform.position = new Vector3(transform.position.x, transform.position.y, FloorManager.ins.Floors.Length - Mathf.Floor(level) - 0.6f);
+		transform.position = new Vector3(transform.position.x, transform.position.y, FloorManager.ins.Floors.Length - Mathf.Floor(Level) - 0.6f);
 		
 		//set the current alpha based on if the player should be able to see us
 		SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-		sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.g, FloorManager.ins.GetOpacity(level));
+		sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, FloorManager.ins.GetOpacity(Level));
+	}
+
+	Vector2 AvoidDanger()
+	{
+		Debug.DrawRay(transform.position, rb.velocity * 2);
+
+		Transform hit = null;
+		foreach (Transform H in CurrentCollided)
+		{
+			if ((hit == null || Vector2.Distance(transform.position, H.position) < Vector2.Distance(transform.position, hit.position)))
+			{
+				hit = H;
+			}
+		}
+
+		if (hit != null)
+		{
+			Vector2 ray = (rb.velocity - rb.position).normalized * Vector2.Dot(hit.transform.position - transform.position, (rb.velocity - rb.position).normalized);
+			Debug.DrawLine(transform.position, (Vector2)transform.position + ray, Color.green);
+
+			Vector2 Avoid = ((Vector2)transform.position + ray) - (Vector2)hit.transform.position;
+			Debug.DrawLine(hit.transform.position, (Vector2)hit.transform.position + (Avoid.normalized * AvoidDist), Color.magenta);
+
+			return Avoid.normalized * AvoidDist;
+		}
+
+		return Vector2.zero;
 	}
 
 	//convenience method to get the percentage of X between A and B
 	float Percent(float x, float a, float b)
 	{
 		return (x - a) / (b - a);
+	}
+
+	private void OnTriggerEnter2D(Collider2D collision)
+	{
+		if (collision.tag == "Player" || collision.tag == "Enemy")
+		{
+			print("Adding "+collision.name);
+			CurrentCollided.Add(collision.transform);
+		}
+	}
+
+	private void OnTriggerExit2D(Collider2D collision)
+	{
+		if (collision.tag == "Player" || collision.tag == "Enemy")
+		{
+			CurrentCollided.RemoveAll(c => (c == collision.transform));
+			print("Removing " + collision.name);
+		}
 	}
 }
 
