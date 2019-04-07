@@ -18,7 +18,15 @@ public class PlayerMovement : MonoBehaviour
 		Camera.main.transform.position = transform.position + new Vector3(0, 0, -20);
 
 		//Make the player move towards the direction the controller is pointing
-		rb.velocity = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * SpeedMult;
+		rb.velocity = transform.right * Input.GetAxis("Vertical");//new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * SpeedMult;
+		if (Input.GetAxis("Vertical") > 0)
+		{
+			Model.SetBool("Walking", true);
+		}
+		else
+		{
+			Model.SetBool("Walking", false);
+		}
 
 		//get the difference between the mouse position and our position in screenspace
 		Vector3 dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
