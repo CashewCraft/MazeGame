@@ -21,11 +21,11 @@ public class PlayerMovement : MonoBehaviour
 		rb.velocity = transform.right * Input.GetAxis("Vertical");//new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * SpeedMult;
 		if (Input.GetAxis("Vertical") > 0)
 		{
-			Model.SetBool("Walking", true);
+			//Model.SetBool("Walking", true);
 		}
 		else
 		{
-			Model.SetBool("Walking", false);
+			//Model.SetBool("Walking", false);
 		}
 
 		//get the difference between the mouse position and our position in screenspace
