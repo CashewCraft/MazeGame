@@ -12,8 +12,8 @@ public class Stairs : MonoBehaviour
 	public Vector2 Highest;
 
 	//private versions of the needed axis from above
-	float Min;
-	float Max;
+	public float Min;
+	public float Max;
 
 	//the floor we're going from to the floor we're going to
 	public float FromFloor;
