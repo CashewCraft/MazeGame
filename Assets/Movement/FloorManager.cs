@@ -136,18 +136,10 @@ public class FloorManager : MonoBehaviour
 	//method to recursively set the transparency of an object and it's children
 	void SetOpacity(Transform Object, float to)
 	{
-		//try and get all attached spriterenderers
-		SpriteRenderer[] Checking = Object.GetComponents<SpriteRenderer>();
-
-		//check if they exist
-		if (Checking != null)
-		{
-			foreach (SpriteRenderer i in Checking)
-			{
-				//go through them and set their transparency to the given value
-				i.color = new Color(i.color.r, i.color.g, i.color.g, to);
-			}
-		}
+        if (Object.GetComponent<MeshRenderer>() != null)
+        {
+            Object.GetComponent<MeshRenderer>().material.color = new Color(to, to, to, to);
+        }
 
 		//go through all children
 		for (int i = 0; i < Object.childCount; i++)
