@@ -22,12 +22,26 @@ public class PlayerMovement : MonoBehaviour
       
 		if (Input.GetAxis("Vertical") > 0|| Input.GetAxis("Vertical") < 0 || Input.GetAxis("Horizontal") > 0 || Input.GetAxis("Horizontal") < 0)
 		{
-			Model.SetBool("Walking", true);
+			//Model.SetBool("Walking", true);
+
+            if(Input.GetKey("space") == true)
+            {
+                Model.SetBool("Walking", false);
+                Model.SetBool("Running", true);
+                
+            }
+            else
+            {
+                Model.SetBool("Walking", true);
+                Model.SetBool("Running", false);
+               
+            }
 		}
 		else
 		{
 			Model.SetBool("Walking", false);
-		}
+            Model.SetBool("Running", false);
+        }
 
 		//get the difference between the mouse position and our position in screenspace
 		Vector3 dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
