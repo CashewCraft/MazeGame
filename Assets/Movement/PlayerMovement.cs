@@ -28,19 +28,29 @@ public class PlayerMovement : MonoBehaviour
             {
                 Model.SetBool("Walking", false);
                 Model.SetBool("Running", true);
-                
+                Model.SetBool("Stairs", false);
+
             }
-            else
+            if (Input.GetKey(KeyCode.LeftShift) == true)
+            {
+                Model.SetBool("Walking", false);
+                Model.SetBool("Running", false);
+                Model.SetBool("Stairs", true);
+
+            }
+            if((Input.GetKey(KeyCode.LeftShift) == false) && (Input.GetKey("space") == false))
             {
                 Model.SetBool("Walking", true);
                 Model.SetBool("Running", false);
-               
+                Model.SetBool("Stairs", false);
+
             }
 		}
 		else
 		{
 			Model.SetBool("Walking", false);
             Model.SetBool("Running", false);
+            Model.SetBool("Stairs", false);
         }
 
 		//get the difference between the mouse position and our position in screenspace
