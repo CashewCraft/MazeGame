@@ -4901,7 +4901,7 @@ ModelImporter:
     second: CubeAll:geoBack2
   - first:
       74: 7400000
-    second: Take 001
+    second: Walk
   - first:
       95: 9500000
     second: //RootNode
@@ -4969,11 +4969,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Take 001
+      name: Walk
       takeName: Take 001
       internalID: 7400000
       firstFrame: 1
-      lastFrame: 141
+      lastFrame: 30
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

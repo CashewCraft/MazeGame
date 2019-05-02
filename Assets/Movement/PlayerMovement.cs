@@ -19,13 +19,14 @@ public class PlayerMovement : MonoBehaviour
 
 		//Make the player move towards the direction the controller is pointing
 		rb.velocity = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * SpeedMult;
-		if (Input.GetAxis("Vertical") > 0)
+      
+		if (Input.GetAxis("Vertical") > 0|| Input.GetAxis("Vertical") < 0 || Input.GetAxis("Horizontal") > 0 || Input.GetAxis("Horizontal") < 0)
 		{
-			//Model.SetBool("Walking", true);
+			Model.SetBool("Walking", true);
 		}
 		else
 		{
-			//Model.SetBool("Walking", false);
+			Model.SetBool("Walking", false);
 		}
 
 		//get the difference between the mouse position and our position in screenspace
