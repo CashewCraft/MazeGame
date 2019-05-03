@@ -8,14 +8,16 @@ public class PlayerMovement : MonoBehaviour
 	public Rigidbody2D rb;
 
 	public Animator Model;
-
+	
 	public string CurrentRoom;
 
 	public Node StartNode;
 
+    private AudioSource audioSource;
+
 	//a multiplier applied to the speed of the player
 	public float SpeedMult = 1;
-
+	
 	string goal;
 
 	private void Start()
@@ -25,12 +27,20 @@ public class PlayerMovement : MonoBehaviour
 		float TimeToGet = GetTimeToNode(StartNode, i.n, SpeedMult) * 1.5f;
 		CountDownTimer.ins.SetGoal(goal, TimeToGet);
 	}
+	
+    private void Awake()
+    {
+        audioSource = gameObject.GetComponent<AudioSource>();
+    }
 
-	void Update ()
+    void Update ()
 	{
 		//set the position of the main camera
 		Camera.main.transform.position = transform.position + new Vector3(0, 0, -20);
-
+		
+		//Make the player move towards the direction the controller is pointing
+		rb.velocity = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * SpeedMult;
+		
 		//get the difference between the mouse position and our position in screenspace
 		Vector3 dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
 
