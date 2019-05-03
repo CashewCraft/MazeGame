@@ -9,10 +9,17 @@ public class PlayerMovement : MonoBehaviour
 
 	public Animator Model;
 
+    private AudioSource audioSource;
+
 	//a multiplier applied to the speed of the player
 	public float SpeedMult = 1;
 
-	void Update ()
+    private void Awake()
+    {
+        audioSource = gameObject.GetComponent<AudioSource>();
+    }
+
+    void Update ()
 	{
 		//set the position of the main camera
 		Camera.main.transform.position = transform.position + new Vector3(0, 0, -20);
@@ -22,7 +29,8 @@ public class PlayerMovement : MonoBehaviour
       
 		if (Input.GetAxis("Vertical") > 0|| Input.GetAxis("Vertical") < 0 || Input.GetAxis("Horizontal") > 0 || Input.GetAxis("Horizontal") < 0)
 		{
-			//Model.SetBool("Walking", true);
+            //Model.SetBool("Walking", true);
+            
 
             if(Input.GetKey("space") == true)
             {
