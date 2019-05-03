@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CountDownTimer : MonoBehaviour {
 	Image timerBar;
 	public float maxTime = 5f;
-	float timeLeft;
+	public float timeLeft;
 	public GameObject timesUpText;
 	public GameObject GoalText;
 	public GameObject TimeText;
@@ -16,9 +17,12 @@ public class CountDownTimer : MonoBehaviour {
 	public Color StartColour;
 	public Color EndColour;
 
+	public float Countdown = 6;
+	bool ended = false;
+
 	public static CountDownTimer ins;
 
-	void Start()
+	void Awake()
 	{
 		ins = this;
 
@@ -31,22 +35,27 @@ public class CountDownTimer : MonoBehaviour {
 
 	public void Win()
 	{
-		GoalText.SetActive(true);
-		TimeText.SetActive(true);
-		TimeText.GetComponent<Text>().text = ((timeLeft/ maxTime) * 100) + "% time left";
-		Time.timeScale = 0;
+		if (!ended)
+		{
+			GoalText.SetActive(true);
+			TimeText.SetActive(true);
+			TimeText.GetComponent<Text>().text = ((timeLeft / maxTime) * 100) + "% time left";
+			ended = true;
+			//Time.timeScale = 0;
+		}
 	}
 
 	public void SetGoal(string name, float Mt)
 	{
 		maxTime = Mt;
 		timeLeft = Mt;
-		GoalDisp.GetComponent<Text>().text = "Goal: "+name;
+		if (GoalDisp != null)
+			GoalDisp.GetComponent<Text>().text = "Goal: "+name;
 	}
 
 	void Update()
 	{
-		if (timeLeft > 0)
+		if (timeLeft > 0 && !ended)
 		{
 			timeLeft -= Time.deltaTime;
 			timerBar.fillAmount = timeLeft/maxTime;
@@ -54,13 +63,24 @@ public class CountDownTimer : MonoBehaviour {
 			TimeDisplay.text = ((timeLeft >= 600) ? "" : "0") + Mathf.FloorToInt(timeLeft / 60) + ":" + ((timeLeft % 60 > 10) ? "" : "0") + Mathf.FloorToInt(timeLeft % 60);
 			timerBar.color = Color.Lerp(EndColour, StartColour, timeLeft / maxTime);
 		}
-		else
+		else if (timeLeft <= 0)
 		{
 			TimeDisplay.text = "00:00";
 			timerBar.color = EndColour;
 
 			timesUpText.SetActive(true);
-			Time.timeScale = 0;
+			//Time.timeScale = 0;
+
+			ended = true;
+		}
+
+		if (ended)
+		{
+			Countdown -= Time.deltaTime;
+			if (Countdown <= 0)
+			{
+				SceneManager.LoadScene(0);
+			}
 		}
 	}
 }
