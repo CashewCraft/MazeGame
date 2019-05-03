@@ -34,9 +34,11 @@ public class PlayerMovement : MonoBehaviour
 
             if(Input.GetKey("space") == true)
             {
+
                 Model.SetBool("Walking", false);
                 Model.SetBool("Running", true);
                 Model.SetBool("Stairs", false);
+                
 
             }
             if (Input.GetKey(KeyCode.LeftShift) == true)
@@ -48,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
             }
             if((Input.GetKey(KeyCode.LeftShift) == false) && (Input.GetKey("space") == false))
             {
+
                 Model.SetBool("Walking", true);
                 Model.SetBool("Running", false);
                 Model.SetBool("Stairs", false);
