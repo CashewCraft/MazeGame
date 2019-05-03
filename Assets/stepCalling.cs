@@ -18,7 +18,7 @@ public class stepCalling : MonoBehaviour
     private void Step()
     {
         Debug.Log("I HAVE STEPPED");
-        AudioClip clip = steps[Random.Range(0, steps.Length)];
+        AudioClip clip = steps[Random.Range(0, steps.Length-1)];
         audioSource.PlayOneShot(clip);
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class CountDownTimer : MonoBehaviour {
 	Image timerBar;
 	public float maxTime = 5f;
-	float timeLeft;
+	public float timeLeft;
 	public GameObject timesUpText;
 	public GameObject GoalText;
 	public GameObject TimeText;
