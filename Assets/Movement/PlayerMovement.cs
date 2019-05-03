@@ -54,12 +54,34 @@ public class PlayerMovement : MonoBehaviour
 		rb.velocity = transform.rotation * (new Vector2(0, Input.GetAxis("Vertical")) * SpeedMult);
 		if (Input.GetAxis("Vertical") > 0)
 		{
-			Model.SetBool("Moving", true);
+            if (Input.GetKey("space") == true)
+            {
+                Model.SetBool("Stairs", true);
+                Model.SetBool("Walking", false);
+                Model.SetBool("Running", false);
+            }
+            if (Input.GetKey(KeyCode.LeftShift) == true)
+            {
+                Model.SetBool("Stairs", false);
+                Model.SetBool("Walking", false);
+                Model.SetBool("Running", true);
+            }
+            if (Input.GetKey(KeyCode.LeftShift) == false && (Input.GetKey("space") == false))
+            {
+                Model.SetBool("Stairs", false);
+                Model.SetBool("Walking", true);
+                Model.SetBool("Running", false);
+            }
+
+
+  
 		}
 		else
 		{
-			Model.SetBool("Moving", false);
-		}
+            Model.SetBool("Stairs", false);
+            Model.SetBool("Walking", false);
+            Model.SetBool("Running", false);
+        }
 
 		if (Input.GetKeyDown(KeyCode.E) && CurrentRoom == goal)
 		{

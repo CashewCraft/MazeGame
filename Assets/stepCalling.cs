@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class stepCalling : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class stepCalling : MonoBehaviour
     private void Step()
     {
         Debug.Log("I HAVE STEPPED");
-        AudioClip clip = steps[Random.Range(0, steps.Length)];
+        AudioClip clip = steps[Random.Range(0, steps.Length-1)];
         audioSource.PlayOneShot(clip);
     }
 }
