@@ -24,8 +24,8 @@ public class backgroundMusicController : MonoBehaviour
         if(!once)
         {
             float percentage = ((CountDownTimer.ins.timeLeft / CountDownTimer.ins.maxTime) * 100);
-            Debug.Log(CountDownTimer.ins.timeLeft % 7.385);
-            if (percentage <= 40 && CountDownTimer.ins.timeLeft % 7.385 <= 0.005)
+            Debug.Log(CountDownTimer.ins.timeLeft % 1.85);
+            if (percentage <= 40 && CountDownTimer.ins.timeLeft % 1.85 <= 0.02)
             {
                 audioSource.Stop();
                 AudioClip clip = backgroundSong[backgroundSong.Length - 1];
