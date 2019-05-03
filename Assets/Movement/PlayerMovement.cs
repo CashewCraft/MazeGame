@@ -9,24 +9,27 @@ public class PlayerMovement : MonoBehaviour
 
 	public Animator Model;
 
+	public string CurrentRoom;
+
+	public Node StartNode;
+
 	//a multiplier applied to the speed of the player
 	public float SpeedMult = 1;
+
+	string goal;
+
+	private void Start()
+	{
+		DoorLinks i = AImovement.ins.SpawnPoint[Random.Range(0, AImovement.ins.SpawnPoint.Count)];
+		goal = i.Linked.Name;
+		float TimeToGet = GetTimeToNode(StartNode, i.n, SpeedMult) * 1.5f;
+		CountDownTimer.ins.SetGoal(goal, TimeToGet);
+	}
 
 	void Update ()
 	{
 		//set the position of the main camera
 		Camera.main.transform.position = transform.position + new Vector3(0, 0, -20);
-
-		//Make the player move towards the direction the controller is pointing
-		rb.velocity = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * SpeedMult;
-		if (Input.GetAxis("Vertical") > 0)
-		{
-			//Model.SetBool("Walking", true);
-		}
-		else
-		{
-			//Model.SetBool("Walking", false);
-		}
 
 		//get the difference between the mouse position and our position in screenspace
 		Vector3 dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
@@ -35,11 +38,22 @@ public class PlayerMovement : MonoBehaviour
 		float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
 		//set the rotation to be the calculated angle rotated around the z axis
-		transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+		transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward) * Quaternion.Euler(0,0,-90);
 
-		if (rb.velocity.magnitude > 0)
+		//Make the player move towards the direction the controller is pointing
+		rb.velocity = transform.rotation * (new Vector2(0, Input.GetAxis("Vertical")) * SpeedMult);
+		if (Input.GetAxis("Vertical") > 0)
 		{
-			//Put animation stuff in here
+			Model.SetBool("Moving", true);
+		}
+		else
+		{
+			Model.SetBool("Moving", false);
+		}
+
+		if (Input.GetKeyDown(KeyCode.E) && CurrentRoom == goal)
+		{
+			CountDownTimer.ins.Win();
 		}
 	}
 

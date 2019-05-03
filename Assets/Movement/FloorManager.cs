@@ -103,7 +103,7 @@ public class FloorManager : MonoBehaviour
 			foreach (Transform i in StairList[index]) //go through them
 			{
 				Collider2D[] Checking = i.GetComponents<Collider2D>(); //try and get all colliders on the object
-				if (Checking != null) //if there was a collider
+				if (Checking != null && (i.GetComponent<Stairs>().ToFloor == index || i.GetComponent<Stairs>().ToFloor < index + 1)) //if there was a collider
 				{
 					foreach (Collider2D j in Checking)
 					{
@@ -163,6 +163,10 @@ public class FloorManager : MonoBehaviour
 				//go through them and enable/disable them based on argument
 				i.enabled = to;
 			}
+		}
+		if (Object.tag == "Door")
+		{
+			Object.GetComponent<Door>().SetVisible(to);
 		}
 
 		//go through children

@@ -8,16 +8,40 @@ public class CountDownTimer : MonoBehaviour {
 	public float maxTime = 5f;
 	float timeLeft;
 	public GameObject timesUpText;
+	public GameObject GoalText;
+	public GameObject TimeText;
+	public GameObject GoalDisp;
 	public Text TimeDisplay;
 
 	public Color StartColour;
 	public Color EndColour;
 
+	public static CountDownTimer ins;
+
 	void Start()
 	{
+		ins = this;
+
 		timesUpText.SetActive(false);
+		GoalText.SetActive(false);
+		TimeText.SetActive(false);
 		timerBar = GetComponent<Image>();
 		timeLeft = maxTime;
+	}
+
+	public void Win()
+	{
+		GoalText.SetActive(true);
+		TimeText.SetActive(true);
+		TimeText.GetComponent<Text>().text = ((timeLeft/ maxTime) * 100) + "% time left";
+		Time.timeScale = 0;
+	}
+
+	public void SetGoal(string name, float Mt)
+	{
+		maxTime = Mt;
+		timeLeft = Mt;
+		GoalDisp.GetComponent<Text>().text = "Goal: "+name;
 	}
 
 	void Update()

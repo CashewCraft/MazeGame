@@ -18,11 +18,14 @@ public class AIagent : MonoBehaviour {
 	public float Level = 0;
 
 	bool CanCollide = true;
+	bool Initalising = true;
 
 	List<Transform> CurrentCollided = new List<Transform>();
 
-	void GenPathTo(Node Destination)
+	public bool GenPathTo(Node Destination)
 	{
+		print("Trying to generate a path from " + Destination.name + " to " + Current.name);
+
 		//Create new lists for the open and closed nodes and put the current node into the open nodes
 		List<PathfindingNodeInfo> Closed = new List<PathfindingNodeInfo>();
 		List<PathfindingNodeInfo> Open = new List<PathfindingNodeInfo>
@@ -39,7 +42,7 @@ public class AIagent : MonoBehaviour {
 			if (Open.Count == 0) //if there are not more open nodes
 			{
 				print("Could not find destination in the graph");
-				return; //end the function since the desination is not reachable from the current node
+				return false; //end the function since the desination is not reachable from the current node
 			}
 
 			//set the lowest cost as the first element's cost so we don't end up repeating closed nodes
@@ -112,20 +115,23 @@ public class AIagent : MonoBehaviour {
 			Path.Push(Target.Represent);
 			Target = Target.Previous;
 		}
-	}
-
-	private void Start()
-	{
-		GenPathTo(Last); //make a path to whatever the last node was
-		Last = Current; //set the last node to the next one
+		return true;
 	}
 
 	private void Update()
 	{
 		Vector2 SteerDirection = new Vector2();
 
-		//set the intial velocity to be towards the target
-		SteerDirection = ((Vector2)(Current.gameObject.transform.position - transform.position)).normalized * Speed;
+		try
+		{
+			//set the intial velocity to be towards the target
+			SteerDirection = ((Vector2)(Current.gameObject.transform.position - transform.position)).normalized * Speed;
+		}
+		catch
+		{
+			Destroy(gameObject);
+			return;
+		}
 
 		//Apply any steering needed for collision avoidance
 		SteerDirection += AvoidDanger();
@@ -147,6 +153,17 @@ public class AIagent : MonoBehaviour {
 		{
 			Last = Current; //Make the current into the last
 			Current = Path.Pop(); //get the next step in the path
+		}
+		else if (Vector2.Distance(Current.gameObject.transform.position, transform.position) < ReachDistance && Path.Count == 0 && !Initalising)
+		{
+			Destroy(gameObject);
+			return;
+		}
+		else if (Initalising)
+		{
+			Initalising = false;
+			GenPathTo(Last);
+			Last = Current;
 		}
 
 		//Get the distance between the last and the current node
@@ -174,10 +191,16 @@ public class AIagent : MonoBehaviour {
 
 		//set the Z of the current position to one above the current level
 		transform.position = new Vector3(transform.position.x, transform.position.y, FloorManager.ins.Floors.Length - Mathf.Floor(Level) - 0.6f);
-		
-		//set the current alpha based on if the player should be able to see us
-		SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-		sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, FloorManager.ins.GetOpacity(Level));
+
+		//hide if the player shouldn't be able to see us
+		if (Mathf.Abs(FloorManager.ins.level - Level) >= 0.8f)
+		{
+			transform.GetChild(0).gameObject.SetActive(false);
+		}
+		else
+		{
+			transform.GetChild(0).gameObject.SetActive(true);
+		}
 	}
 
 	Vector2 AvoidDanger()
@@ -228,6 +251,22 @@ public class AIagent : MonoBehaviour {
 		{
 			CurrentCollided.RemoveAll(c => (c == collision.transform));
 			print("Removing " + collision.name);
+		}
+	}
+
+	void SetVisibilty(Transform Object, float to)
+	{
+		if (Object.GetComponent<MeshRenderer>() != null)
+		{
+			Material old = Object.GetComponent<MeshRenderer>().material;
+			old.color = new Color(old.color.r, old.color.g, old.color.b, to);
+		}
+
+		//go through all children
+		for (int i = 0; i < Object.childCount; i++)
+		{
+			//set their transparency to the same
+			SetVisibilty(Object.GetChild(i), to);
 		}
 	}
 }

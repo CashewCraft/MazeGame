@@ -36,10 +36,26 @@ public class Stairs : MonoBehaviour
 		if (other.tag == "Player")
 		{
 			//get the exact "floor" the player is on (i.e. halfway up on stairs from floors 1 to 2 should give 1.5)
-			print(Percent((useX) ? other.transform.position.x : other.transform.position.y, Min, Max));
+			//print(Percent((useX) ? other.transform.position.x : other.transform.position.y, Min, Max));
 			float level = Mathf.Lerp(FromFloor, ToFloor, Percent((useX)?other.transform.position.x:other.transform.position.y, Min, Max));
 			print(level);
 			FloorManager.ins.SetFloor(level); //send the progress to the floor manager to set transparency appropriately
+		}
+	}
+
+	private void OnTriggerExit(Collider other)
+	{
+		//if the object is the player
+		if (other.tag == "Player")
+		{
+			if (((useX) ? other.transform.position.x : other.transform.position.y) <= Min)
+			{
+				FloorManager.ins.SetFloor(FromFloor); //send the progress to the floor manager to set transparency appropriately
+			}
+			else if (((useX) ? other.transform.position.x : other.transform.position.y) >= Max)
+			{
+				FloorManager.ins.SetFloor(ToFloor); //send the progress to the floor manager to set transparency appropriately
+			}
 		}
 	}
 

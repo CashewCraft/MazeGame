@@ -32,6 +32,7 @@ public class NodeEditor : MonoBehaviour {
 
 	void Update ()
 	{
+		transform.position += new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * 0.25f;
 
 		Vector2 MousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition); //Get the position of the mouse
 
