@@ -24,19 +24,24 @@ public class AImovement : MonoBehaviour
 		if (EventTimer <= 0)
 		{
 			EventTimer = Random.Range(TimeBetweenMin, TimeBetweenMax);
-			Node From = SpawnPoint[Random.Range(0, SpawnPoint.Count)].n;
-			Node To = SpawnPoint[Random.Range(0, SpawnPoint.Count)].n;
-
-			GameObject NewAgent = Instantiate(Agent, transform);
-			Agent.transform.position = From.transform.position;
-			Agent.GetComponent<AIagent>().Current = From;
-			Agent.GetComponent<AIagent>().Last = To;
+			SpawnGuy();
 		}
 		else
 		{
 			EventTimer -= Time.deltaTime;
 		}
     }
+
+	void SpawnGuy()
+	{
+		Node From = SpawnPoint[Random.Range(0, SpawnPoint.Count)].n;
+		Node To = SpawnPoint[Random.Range(0, SpawnPoint.Count)].n;
+
+		GameObject NewAgent = Instantiate(Agent, transform);
+		Agent.transform.position = From.transform.position;
+		Agent.GetComponent<AIagent>().Current = From;
+		Agent.GetComponent<AIagent>().Last = To;
+	}
 }
 
 [System.Serializable]

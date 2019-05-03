@@ -23,6 +23,12 @@ public class FloorManager : MonoBehaviour
 	{
 		//set this as the active tracker and initialise the floors
 		ins = this;
+	}
+
+	private void Awake()
+	{
+		print("Yikes");
+		Time.timeScale = 1;
 		Init();
 	}
 
@@ -102,6 +108,8 @@ public class FloorManager : MonoBehaviour
 		{
 			foreach (Transform i in StairList[index]) //go through them
 			{
+				if (i != null)
+				{
 				Collider2D[] Checking = i.GetComponents<Collider2D>(); //try and get all colliders on the object
 				if (Checking != null && (i.GetComponent<Stairs>().ToFloor == index || i.GetComponent<Stairs>().ToFloor < index + 1)) //if there was a collider
 				{
@@ -109,6 +117,7 @@ public class FloorManager : MonoBehaviour
 					{
 						j.enabled = true; //enable it
 					}
+				}
 				}
 			}
 		}
@@ -167,6 +176,10 @@ public class FloorManager : MonoBehaviour
 		if (Object.tag == "Door")
 		{
 			Object.GetComponent<Door>().SetVisible(to);
+		}
+		if (Object.tag == "Audio")
+		{
+			Object.gameObject.SetActive(to);
 		}
 
 		//go through children
